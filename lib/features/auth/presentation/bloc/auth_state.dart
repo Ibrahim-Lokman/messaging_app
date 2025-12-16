@@ -1,10 +1,11 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/errors/failure.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
   
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class AuthInitial extends AuthState {}
@@ -12,21 +13,24 @@ class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthAuthenticated extends AuthState {
-  final String userId; 
-  // We can add User entity here later
-  const AuthAuthenticated(this.userId);
+  final String uid;
+
+  const AuthAuthenticated(this.uid);
 
   @override
-  List<Object> get props => [userId];
+  List<Object?> get props => [uid];
 }
 
 class AuthUnauthenticated extends AuthState {}
 
 class AuthError extends AuthState {
-  final String message;
+  final Failure failure;
+  final bool canRetry;
 
-  const AuthError(this.message);
+  const AuthError(this.failure, {this.canRetry = false});
+
+  String get message => failure.message;
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [failure, canRetry];
 }

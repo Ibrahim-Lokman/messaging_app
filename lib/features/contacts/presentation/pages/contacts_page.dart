@@ -26,7 +26,7 @@ class _ContactsPageState extends State<ContactsPage> {
   void _loadFriends() {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      context.read<ContactsBloc>().add(ContactsLoadFriends(authState.userId));
+      context.read<ContactsBloc>().add(ContactsLoadFriends(authState.uid));
     }
   }
 
@@ -34,7 +34,7 @@ class _ContactsPageState extends State<ContactsPage> {
     final usernameController = TextEditingController();
     final authState = context.read<AuthBloc>().state;
     final currentUserId =
-        authState is AuthAuthenticated ? authState.userId : null;
+        authState is AuthAuthenticated ? authState.uid : null;
 
     if (currentUserId == null) return;
 

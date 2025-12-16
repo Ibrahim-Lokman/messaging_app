@@ -26,7 +26,7 @@ class _ChatPageState extends State<ChatPage> {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<ChatBloc>().add(
-            ChatLoadMessages(authState.userId, widget.otherUser.uid),
+            ChatLoadMessages(authState.uid, widget.otherUser.uid),
           );
     }
   }
@@ -37,7 +37,7 @@ class _ChatPageState extends State<ChatPage> {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<ChatBloc>().add(
-            ChatSendMessage(authState.userId, widget.otherUser.uid, text),
+            ChatSendMessage(authState.uid, widget.otherUser.uid, text),
           );
       _textController.clear();
       // Scroll to bottom (actually top since reverse)
@@ -54,7 +54,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final authState = context.read<AuthBloc>().state;
-    final currentUserId = authState is AuthAuthenticated ? authState.userId : '';
+    final currentUserId = authState is AuthAuthenticated ? authState.uid : '';
 
     return Scaffold(
       appBar: AppBar(

@@ -1,11 +1,13 @@
+import '../../../../core/utils/result.dart';
+
 abstract class AuthRepository {
-  Future<String> login({required String email, required String password});
-  Future<String> loginWithUsername({required String username, required String password});
-  Future<String> signup({
+  Future<Result<String>> login({required String email, required String password});
+  Future<Result<String>> loginWithUsername({required String username, required String password});
+  Future<Result<String>> signup({
     required String username,
     required String email,
     required String password,
   });
-  Future<void> logout();
+  Future<Result<void>> logout();
   // Future<User?> getCurrentUser();
 }

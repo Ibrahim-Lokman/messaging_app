@@ -5,6 +5,7 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/auth_field.dart';
+import '../../../../core/widgets/error_widget.dart' as error_widgets;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -46,7 +47,17 @@ class _LoginPageState extends State<LoginPage> {
           }
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Theme.of(context).colorScheme.error,
+                action: state.canRetry
+                    ? SnackBarAction(
+                        label: 'Retry',
+                        textColor: Colors.white,
+                        onPressed: _onLoginPressed,
+                      )
+                    : null,
+              ),
             );
           }
         },
@@ -72,6 +83,16 @@ class _LoginPageState extends State<LoginPage> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
+                    
+                    // Show error message if present
+                    if (state is AuthError) ...[
+                      error_widgets.ErrorMessageWidget(
+                        failure: state.failure,
+                        onRetry: state.canRetry ? _onLoginPressed : null,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                    
                     AuthField(
                       controller: _identifierController,
                       hintText: 'Username or Email',

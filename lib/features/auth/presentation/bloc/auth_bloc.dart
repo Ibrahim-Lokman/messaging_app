@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../../../core/utils/notification_service.dart';
+import '../../../../core/errors/error_handler.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -23,36 +24,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final String uid;
+      final result;
       
       // Detect if identifier is email or username
       if (event.identifier.contains('@')) {
         // It's an email
-        uid = await authRepository.login(
+        result = await authRepository.login(
           email: event.identifier,
           password: event.password,
         );
       } else {
         // It's a username
-        uid = await authRepository.loginWithUsername(
+        result = await authRepository.loginWithUsername(
           username: event.identifier,
           password: event.password,
         );
       }
       
-      emit(AuthAuthenticated(uid));
+      result.fold(
+        onSuccess: (uid) async {
+          emit(AuthAuthenticated(uid));
+          
+          // Try to save token
+          try {
+            await notificationService.saveToken(uid);
+          } catch (_) {
+            // Ignore notification token errors
+          }
+        },
+        onFailure: (failure) {
+          emit(AuthError(
+            failure,
+            canRetry: ErrorHandler.isRetryable(failure),
+          ));
+        },
+      );
       
-      // Try to save token
-      try {
-         await notificationService.saveToken(uid);
-      } catch (_) {}
-      
-    } catch (e) {
-      emit(AuthError(e.toString()));
+    } catch (e, stackTrace) {
+      final failure = ErrorHandler.handleException(e, stackTrace);
+      emit(AuthError(failure, canRetry: ErrorHandler.isRetryable(failure)));
     }
   }
-  
-  // ... (rest of methods)
 
   Future<void> _onSignUpRequested(
     AuthSignUpRequested event,
@@ -60,17 +72,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final uid = await authRepository.signup(
+      final result = await authRepository.signup(
         username: event.username,
         email: event.email,
         password: event.password,
       );
-      emit(AuthAuthenticated(uid));
-      try {
-         await notificationService.saveToken(uid);
-      } catch (_) {}
-    } catch (e) {
-      emit(AuthError(e.toString()));
+      
+      result.fold(
+        onSuccess: (uid) async {
+          emit(AuthAuthenticated(uid));
+          
+          // Try to save token
+          try {
+            await notificationService.saveToken(uid);
+          } catch (_) {
+            // Ignore notification token errors
+          }
+        },
+        onFailure: (failure) {
+          emit(AuthError(
+            failure,
+            canRetry: ErrorHandler.isRetryable(failure),
+          ));
+        },
+      );
+    } catch (e, stackTrace) {
+      final failure = ErrorHandler.handleException(e, stackTrace);
+      emit(AuthError(failure, canRetry: ErrorHandler.isRetryable(failure)));
     }
   }
 
@@ -79,7 +107,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    await authRepository.logout();
-    emit(AuthUnauthenticated());
+    try {
+      final result = await authRepository.logout();
+      
+      result.fold(
+        onSuccess: (_) {
+          emit(AuthUnauthenticated());
+        },
+        onFailure: (failure) {
+          emit(AuthError(failure));
+        },
+      );
+    } catch (e, stackTrace) {
+      final failure = ErrorHandler.handleException(e, stackTrace);
+      emit(AuthError(failure));
+    }
   }
 }
