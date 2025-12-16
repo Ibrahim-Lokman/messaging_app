@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:messaging_app/features/profile/data/profile_repository.dart';
 import 'core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
@@ -20,13 +21,11 @@ import 'core/utils/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   // Pass all uncaught "fatal" errors from the framework to Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  
+
   // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -34,7 +33,7 @@ void main() async {
   };
 
   await Hive.initFlutter();
-  
+
   final notificationService = NotificationService();
   try {
     await notificationService.initialize();
@@ -62,6 +61,15 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider<ChatRepository>(
           create: (_) => FirebaseChatRepository(),
+        ),
+        RepositoryProvider<ProfileRepository>(
+          create:
+              (
+                _,
+              ) => /* TODO: Provide your ProfileRepository implementation here */
+                  throw UnimplementedError(
+                    'Provide ProfileRepository implementation',
+                  ),
         ),
       ],
       child: MultiBlocProvider(

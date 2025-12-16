@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:messaging_app/features/profile/domain/entities/profile.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
 
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -33,8 +34,7 @@ class _ContactsPageState extends State<ContactsPage> {
   void _showAddFriendDialog(BuildContext context) {
     final usernameController = TextEditingController();
     final authState = context.read<AuthBloc>().state;
-    final currentUserId =
-        authState is AuthAuthenticated ? authState.uid : null;
+    final currentUserId = authState is AuthAuthenticated ? authState.uid : null;
 
     if (currentUserId == null) return;
 
@@ -86,11 +86,8 @@ class _ContactsPageState extends State<ContactsPage> {
                               ElevatedButton(
                                 onPressed: () {
                                   context.read<ContactsBloc>().add(
-                                        ContactsAddFriend(
-                                          currentUserId,
-                                          user,
-                                        ),
-                                      );
+                                    ContactsAddFriend(currentUserId, user),
+                                  );
                                   Navigator.of(dialogContext).pop();
                                 },
                                 child: const Text('Add User'),
@@ -114,9 +111,9 @@ class _ContactsPageState extends State<ContactsPage> {
                 onPressed: () {
                   final username = usernameController.text.trim();
                   if (username.isNotEmpty) {
-                    context
-                        .read<ContactsBloc>()
-                        .add(ContactsSearchUser(username));
+                    context.read<ContactsBloc>().add(
+                      ContactsSearchUser(username),
+                    );
                   }
                 },
                 child: const Text('Search'),
@@ -140,6 +137,12 @@ class _ContactsPageState extends State<ContactsPage> {
         appBar: AppBar(
           title: const Text('Contacts'),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.account_circle),
+              onPressed: () {
+                context.push('/profile');
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.logout),
               onPressed: () {
@@ -178,7 +181,7 @@ class _ContactsPageState extends State<ContactsPage> {
                 },
               );
             } else if (state is ContactsError) {
-               return Center(child: Text('Error: ${state.message}'));
+              return Center(child: Text('Error: ${state.message}'));
             }
             return const Center(child: Text('Something went wrong'));
           },
