@@ -30,6 +30,44 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<String> loginWithUsername({required String username, required String password}) async {
+    try {
+      // Look up email from username
+      final email = await _getEmailFromUsername(username);
+      
+      // Use the existing login method with the retrieved email
+      return await login(email: email, password: password);
+    } catch (e) {
+      throw Exception('Login failed: $e');
+    }
+  }
+
+  Future<String> _getEmailFromUsername(String username) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        throw Exception('Username not found');
+      }
+
+      final userData = querySnapshot.docs.first.data();
+      final email = userData['email'] as String?;
+      
+      if (email == null) {
+        throw Exception('Email not found for username');
+      }
+
+      return email;
+    } catch (e) {
+      throw Exception('Failed to lookup username: $e');
+    }
+  }
+
+  @override
   Future<String> signup({
     required String username,
     required String email,

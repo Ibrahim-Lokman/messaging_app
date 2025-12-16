@@ -23,10 +23,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      final uid = await authRepository.login(
-        email: event.email,
-        password: event.password,
-      );
+      final String uid;
+      
+      // Detect if identifier is email or username
+      if (event.identifier.contains('@')) {
+        // It's an email
+        uid = await authRepository.login(
+          email: event.identifier,
+          password: event.password,
+        );
+      } else {
+        // It's a username
+        uid = await authRepository.loginWithUsername(
+          username: event.identifier,
+          password: event.password,
+        );
+      }
       
       emit(AuthAuthenticated(uid));
       
