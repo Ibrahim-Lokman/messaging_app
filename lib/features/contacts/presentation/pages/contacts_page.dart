@@ -64,7 +64,7 @@ class _ContactsPageState extends State<ContactsPage> {
                         if (state.error != null) {
                           return Text(
                             state.error!,
-                            style: const TextStyle(color: Colors.red),
+                            style: TextStyle(color: Theme.of(context).colorScheme.error),
                           );
                         }
                         if (state.searchResult != null) {
@@ -77,7 +77,13 @@ class _ContactsPageState extends State<ContactsPage> {
                                       ? NetworkImage(user.photoUrl!)
                                       : null,
                                   child: user.photoUrl == null
-                                      ? Text(user.username[0].toUpperCase())
+                                      ? Text(
+                                          user.username[0].toUpperCase(),
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.onPrimary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
                                       : null,
                                 ),
                                 title: Text(user.username),
@@ -169,7 +175,13 @@ class _ContactsPageState extends State<ContactsPage> {
                           ? NetworkImage(friend.photoUrl!)
                           : null,
                       child: friend.photoUrl == null
-                          ? Text(friend.username[0].toUpperCase())
+                          ? Text(
+                              friend.username[0].toUpperCase(),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
                           : null,
                     ),
                     title: Text(friend.username),

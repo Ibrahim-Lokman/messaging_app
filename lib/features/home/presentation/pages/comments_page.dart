@@ -301,12 +301,6 @@ class _CommentsPageState extends State<CommentsPage> {
                         controller: _commentController,
                         decoration: InputDecoration(
                           hintText: 'Write a comment...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 8,

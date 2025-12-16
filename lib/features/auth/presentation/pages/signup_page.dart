@@ -121,14 +121,7 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: _onSignupPressed,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text('Sign Up',
-                          style: TextStyle(fontSize: 16)),
+                      child: const Text('Sign Up'),
                     ),
                     const SizedBox(height: 16),
                     TextButton(

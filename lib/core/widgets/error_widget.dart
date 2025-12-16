@@ -50,10 +50,7 @@ class ErrorDisplayWidget extends StatelessWidget {
                 icon: const Icon(Icons.refresh),
                 label: Text(retryButtonText ?? 'Try Again'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
+                  // Inherit padding from theme
                 ),
               ),
             ],
@@ -105,7 +102,7 @@ class ErrorMessageWidget extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.errorContainer,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [

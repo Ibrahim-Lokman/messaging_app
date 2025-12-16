@@ -37,10 +37,7 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: AppBar(
-          title: const Text(
-            'Home',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-          ),
+          title: const Text('Home'),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
           elevation: 0,
@@ -124,16 +121,6 @@ class _HomePageState extends State<HomePage> {
                           controller: _postController,
                           decoration: InputDecoration(
                             hintText: "What's on your mind, ${user?.username ?? 'User'}?",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(24),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 12,
-                            ),
                           ),
                           maxLines: null,
                           textCapitalization: TextCapitalization.sentences,
@@ -155,13 +142,7 @@ class _HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.send),
                   label: const Text('Post'),
                   style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+                    // Inherit from theme
                   ),
                 );
               },
@@ -263,13 +244,6 @@ class _HomePageState extends State<HomePage> {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outlineVariant,
-          width: 1,
-        ),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -300,9 +274,8 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text(
                         post.username,
-                        style: const TextStyle(
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
                         ),
                       ),
                       Text(
@@ -326,7 +299,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 12),
             Text(
               post.content,
-              style: const TextStyle(fontSize: 15, height: 1.4),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 12),
             const Divider(),

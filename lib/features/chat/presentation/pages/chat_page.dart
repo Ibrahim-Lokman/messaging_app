@@ -196,10 +196,6 @@ class _ChatPageState extends State<ChatPage> {
                         hintText: 'Type a message...',
                         filled: true,
                         fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.5),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide.none,
-                        ),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       ),
                       onSubmitted: (_) => _sendMessage(),
