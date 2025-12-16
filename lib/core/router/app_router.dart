@@ -17,6 +17,8 @@ import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/chat/presentation/bloc/chat_bloc.dart';
 import '../../features/chat/domain/repositories/chat_repository.dart';
 import '../../features/auth/domain/entities/user.dart';
+import '../../features/home/domain/entities/post.dart';
+import '../../features/home/presentation/pages/comments_page.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -58,6 +60,13 @@ class AppRouter {
         builder: (context, state) {
           final uid = state.extra as String;
           return EditProfilePage(uid: uid);
+        },
+      ),
+      GoRoute(
+        path: '/comments',
+        builder: (context, state) {
+          final post = state.extra as Post;
+          return CommentsPage(post: post);
         },
       ),
     ],

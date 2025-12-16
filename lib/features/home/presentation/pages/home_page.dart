@@ -328,6 +328,28 @@ class _HomePageState extends State<HomePage> {
               post.content,
               style: const TextStyle(fontSize: 15, height: 1.4),
             ),
+            const SizedBox(height: 12),
+            const Divider(),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      context.push('/comments', extra: post);
+                    },
+                    icon: const Icon(Icons.comment_outlined, size: 20),
+                    label: Text(
+                      post.commentCount > 0
+                          ? 'Comment (${post.commentCount})'
+                          : 'Comment',
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
