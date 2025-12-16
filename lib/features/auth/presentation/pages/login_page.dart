@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            context.go('/contacts'); // Redirect to Contacts/Home after login
+            context.go('/home'); // Redirect to Home after login
           }
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(

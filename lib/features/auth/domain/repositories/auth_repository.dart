@@ -1,4 +1,6 @@
 import '../../../../core/utils/result.dart';
+import '../entities/user.dart' as auth_user;
+
 
 abstract class AuthRepository {
   Future<Result<String>> login({required String email, required String password});
@@ -9,5 +11,5 @@ abstract class AuthRepository {
     required String password,
   });
   Future<Result<void>> logout();
-  // Future<User?> getCurrentUser();
+  Future<auth_user.User?> getCurrentUser();
 }

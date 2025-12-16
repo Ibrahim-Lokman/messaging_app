@@ -17,6 +17,8 @@ import 'features/contacts/presentation/bloc/contacts_bloc.dart';
 import 'features/contacts/presentation/bloc/contacts_bloc.dart';
 import 'features/chat/domain/repositories/chat_repository.dart';
 import 'features/chat/data/chat_repository_impl.dart';
+import 'features/home/domain/repositories/posts_repository.dart';
+import 'features/home/data/posts_repository_impl.dart';
 import 'core/utils/notification_service.dart';
 
 void main() async {
@@ -61,6 +63,9 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider<ChatRepository>(
           create: (_) => FirebaseChatRepository(),
+        ),
+        RepositoryProvider<PostsRepository>(
+          create: (_) => FirebasePostsRepository(),
         ),
         RepositoryProvider<ProfileRepository>(
           create:

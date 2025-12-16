@@ -16,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
+    on<SignOut>(_onSignOut);
   }
 
   Future<void> _onLoginRequested(
@@ -122,5 +123,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final failure = ErrorHandler.handleException(e, stackTrace);
       emit(AuthError(failure));
     }
+  }
+
+  Future<void> _onSignOut(
+    SignOut event,
+    Emitter<AuthState> emit,
+  ) async {
+    // Delegate to the existing logout handler
+    await _onLogoutRequested(AuthLogoutRequested(), emit);
   }
 }

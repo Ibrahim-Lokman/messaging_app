@@ -45,7 +45,7 @@ class _SignupPageState extends State<SignupPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            context.go('/contacts'); // Redirect after signup
+            context.go('/home'); // Redirect to Home after signup
           }
           if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(

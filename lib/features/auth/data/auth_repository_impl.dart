@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../domain/repositories/auth_repository.dart';
+import '../domain/entities/user.dart' as auth_user;
 import '../../../core/utils/result.dart';
 import '../../../core/errors/error_handler.dart';
 import '../../../core/errors/app_exception.dart';
@@ -196,5 +197,27 @@ class FirebaseAuthRepository implements AuthRepository {
       temp.add(username.substring(0, i + 1).toLowerCase());
     }
     return temp;
+  }
+
+  Future<auth_user.User?> getCurrentUser() async {
+    try {
+      final firebaseUser = _firebaseAuth.currentUser;
+      if (firebaseUser == null) return null;
+
+      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      if (!userDoc.exists) return null;
+
+      final data = userDoc.data();
+      if (data == null) return null;
+
+      return auth_user.User.fromMap({
+        'uid': firebaseUser.uid,
+        'username': data['username'] ?? '',
+        'email': data['email'] ?? firebaseUser.email ?? '',
+        'photoUrl': data['photoUrl'],
+      });
+    } catch (e) {
+      return null;
+    }
   }
 }

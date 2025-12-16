@@ -8,8 +8,10 @@ import 'package:messaging_app/features/profile/presentation/bloc/profile_bloc.da
 import 'package:messaging_app/features/profile/presentation/pages/edit_profile_page.dart';
 import 'package:messaging_app/features/profile/presentation/pages/profile_page.dart';
 import 'package:messaging_app/features/profile/domain/entities/profile.dart';
+import 'package:messaging_app/features/home/domain/repositories/posts_repository.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/signup_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/contacts/presentation/pages/contacts_page.dart';
 import '../../features/chat/presentation/pages/chat_page.dart';
 import '../../features/chat/presentation/bloc/chat_bloc.dart';
@@ -22,6 +24,10 @@ class AppRouter {
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
       GoRoute(path: '/signup', builder: (context, state) => const SignupPage()),
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => const HomePage(),
+      ),
       GoRoute(
         path: '/contacts',
         builder: (context, state) => const ContactsPage(),
