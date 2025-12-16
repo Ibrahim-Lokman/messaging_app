@@ -11,6 +11,7 @@ import 'firebase_options.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/data/auth_repository_impl.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/bloc/auth_event.dart';
 import 'features/contacts/domain/repositories/contacts_repository.dart';
 import 'features/contacts/data/contacts_repository_impl.dart';
 import 'features/contacts/presentation/bloc/contacts_bloc.dart';
@@ -46,11 +47,16 @@ void main() async {
   runApp(MyApp(notificationService: notificationService));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final NotificationService notificationService;
 
   const MyApp({super.key, required this.notificationService});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -77,27 +83,36 @@ class MyApp extends StatelessWidget {
                   ),
         ),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => AuthBloc(
-              authRepository: context.read<AuthRepository>(),
-              notificationService: notificationService,
+      child: Builder(
+        builder: (context) {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) {
+                  final authBloc = AuthBloc(
+                    authRepository: context.read<AuthRepository>(),
+                    notificationService: widget.notificationService,
+                  );
+                  // Check auth status on app start
+                  authBloc.add(CheckAuthStatus());
+                  return authBloc;
+                },
+              ),
+              BlocProvider(
+                create: (context) => ContactsBloc(
+                  contactsRepository: context.read<ContactsRepository>(),
+                ),
+              ),
+            ],
+            child: MaterialApp.router(
+              title: 'Flutter Chat App',
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: ThemeMode.system,
+              routerConfig: AppRouter.router,
             ),
-          ),
-          BlocProvider(
-            create: (context) => ContactsBloc(
-              contactsRepository: context.read<ContactsRepository>(),
-            ),
-          ),
-        ],
-        child: MaterialApp.router(
-          title: 'Flutter Chat App',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.system,
-          routerConfig: AppRouter.router,
-        ),
+          );
+        },
       ),
     );
   }

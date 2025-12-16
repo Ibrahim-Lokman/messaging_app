@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
     on<SignOut>(_onSignOut);
+    on<CheckAuthStatus>(_onCheckAuthStatus);
   }
 
   Future<void> _onLoginRequested(
@@ -131,5 +132,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     // Delegate to the existing logout handler
     await _onLogoutRequested(AuthLogoutRequested(), emit);
+  }
+
+  Future<void> _onCheckAuthStatus(
+    CheckAuthStatus event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      // Check if user is already logged in via Firebase Auth
+      final user = await authRepository.getCurrentUser();
+      
+      if (user != null) {
+        // User session exists, auto-login
+        emit(AuthAuthenticated(user.uid));
+        
+        // Try to save/update notification token
+        try {
+          await notificationService.saveToken(user.uid);
+        } catch (_) {
+          // Ignore notification token errors
+        }
+      } else {
+        // No active session
+        emit(AuthUnauthenticated());
+      }
+    } catch (e) {
+      // If there's an error checking auth status, treat as unauthenticated
+      emit(AuthUnauthenticated());
+    }
   }
 }
